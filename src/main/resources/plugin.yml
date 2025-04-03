@@ -1,0 +1,91 @@
+name: IntelligentNPCs
+version: '${version}'
+main: es.srjavierdev.intelligentNPCs.IntelligentNPCs
+api-version: '1.20'
+description: Sistema avanzado de NPCs inteligentes con redes neuronales, misiones procedurales y economía
+author: SrJavier
+
+# Dependencias obligatorias (Citizens para los NPCs)
+depend: [Citizens]
+
+# Dependencias opcionales (Vault para economía)
+softdepend: [Vault]
+
+# Configuración de comandos
+commands:
+  intelligentnpc:
+    description: Comando principal para gestionar NPCs inteligentes
+    aliases: [inpc, smartnpc]
+    usage: |
+      /intelligentnpc create <nombre> <personalidad> - Crea un nuevo NPC
+      /intelligentnpc delete - Elimina el NPC seleccionado
+      /intelligentnpc talk - Habla con el NPC seleccionado
+      /intelligentnpc list - Lista todos los NPCs
+      /intelligentnpc reload - Recarga la configuración
+    permission: intelligentnpcs.admin
+
+  aceptarmision:
+    description: Acepta una misión ofrecida por un NPC
+    usage: /aceptarmision
+    permission: intelligentnpcs.mission.accept
+
+  rechazarmision:
+    description: Rechaza una misión ofrecida por un NPC
+    usage: /rechazarmision
+    permission: intelligentnpcs.mission.reject
+
+# Sistema de permisos
+permissions:
+  intelligentnpcs.admin:
+    description: Da acceso completo a todas las funciones administrativas del plugin
+    default: op
+    children:
+      intelligentnpcs.npc.create: true
+      intelligentnpcs.npc.delete: true
+      intelligentnpcs.reload: true
+
+  intelligentnpcs.npc.create:
+    description: Permite crear nuevos NPCs inteligentes
+    default: false
+
+  intelligentnpcs.npc.delete:
+    description: Permite eliminar NPCs inteligentes
+    default: false
+
+  intelligentnpcs.npc.interact:
+    description: Permite interactuar con NPCs inteligentes
+    default: true
+
+  intelligentnpcs.mission.accept:
+    description: Permite aceptar misiones de NPCs
+    default: true
+
+  intelligentnpcs.mission.reject:
+    description: Permite rechazar misiones de NPCs
+    default: true
+
+  intelligentnpcs.mission.admin:
+    description: Permite administrar misiones de NPCs
+    default: op
+    children:
+      intelligentnpcs.mission.create: true
+      intelligentnpcs.mission.remove: true
+
+# Configuración de hooks opcionales
+hooks:
+  PlaceholderAPI: true
+  MythicMobs: false
+  WorldGuard: false
+
+#  PROXIMO POR TERMINAR
+
+# Configuración de métricas (bstats)
+#metrics:
+#  enabled: true
+#  plugin-id: 12345  # Reemplaza con tu ID de plugin en bStats
+
+# Configuración de actualizaciones
+#update-checker:
+#  enabled: true
+#  provider:
+#  resource-id: 123456  # Reemplaza con tu ID de recurso en Spigot

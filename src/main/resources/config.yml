@@ -1,0 +1,124 @@
+﻿# Configuración de IntelligentNPCs
+settings:
+  # Configuración general del plugin
+  debug-mode: false
+  save-interval: 300  # Segundos entre guardados automáticos
+  max-conversation-length: 15  # Máximo de mensajes por conversación
+  default-personality: "neutral"  # Personalidad por defecto para nuevos NPCs
+
+# Configuración de NPCs
+npcs:
+  # Personalidades disponibles
+  personalities:
+    warrior:
+      display-name: "Guerrero"
+      response-speed: 1.2  # Multiplicador de velocidad de respuesta
+      aggression-level: 0.7  # 0-1
+      mission-chance: 0.6  # Probabilidad de ofrecer misiones
+    scholar:
+      display-name: "Erudito"
+      response-speed: 0.8
+      aggression-level: 0.1
+      mission-chance: 0.4
+    merchant:
+      display-name: "Mercader"
+      response-speed: 1.0
+      aggression-level: 0.3
+      mission-chance: 0.8
+    neutral:
+      display-name: "Neutral"
+      response-speed: 1.0
+      aggression-level: 0.5
+      mission-chance: 0.5
+
+  # Configuración de spawn
+  spawn:
+    max-npcs-per-chunk: 2
+    spawn-chance: 0.15  # Probabilidad de spawn en chunks válidos
+
+# Configuración de misiones
+missions:
+  difficulty-settings:
+    min-level: 1
+    max-level: 10
+    level-multiplier: 0.5  # Multiplicador de dificultad basado en nivel
+  
+  reward-settings:
+    base-money-reward: 5.0
+    money-multiplier: 1.5
+    item-reward-chance: 0.65
+    xp-reward-base: 10
+
+  cooldowns:
+    between-missions: 1200  # 20 minutos en segundos
+    same-player-mission: 3600  # 1 hora en segundos
+
+# Configuración de diálogos
+dialogue:
+  greeting-variations: 5  # Número de saludos diferentes por personalidad
+  response-timeout: 30  # Segundos antes de terminar conversación inactiva
+  memory-size: 10  # Número de interacciones recordadas por jugador
+
+  # Palabras clave para triggers especiales
+  triggers:
+    mission-request: ["misión", "tarea", "trabajo", "quest"]
+    help-request: ["ayuda", "socorro", "problema"]
+    trade-request: ["comprar", "vender", "intercambio"]
+
+# Configuración de reputación
+reputation:
+  base-gain: 1
+  base-loss: 2
+  mission-complete-gain: 5
+  mission-fail-loss: 3
+  levels:
+    -100: "Enemigo"
+    -50: "Desconfiado"
+    0: "Neutral"
+    50: "Aliado"
+    100: "Héroe"
+
+# Configuración de economía (requiere Vault)
+economy:
+  enabled: true
+  currency-symbol: "$"
+  reward-multiplier: 1.0
+  penalty-multiplier: 0.5
+
+# Configuración de integraciones
+integrations:
+  Citizens: true
+  Vault: true
+  PlaceholderAPI: false
+  WorldGuard: true
+
+# Mensajes personalizables
+messages:
+  greetings:
+    - "¡Saludos, {player}!"
+    - "¿En qué puedo ayudarte hoy?"
+    - "Hola, ¿qué tal?"
+  mission-offer:
+    - "Tengo una misión para ti: {mission_objective}"
+    - "¿Podrías ayudarme con {mission_objective}?"
+    - "Necesito a alguien para {mission_objective}, ¿te interesa?"
+  reputation-change:
+    positive: "¡Tu reputación con {npc_name} ha mejorado!"
+    negative: "Tu reputación con {npc_name} ha empeorado..."
+  errors:
+    no-mission: "No tengo ninguna misión para ti ahora mismo."
+    cooldown: "Vuelve más tarde, no tengo nada para ti todavía."
+    no-permission: "No pareces estar preparado para esto."
+
+# Configuración avanzada
+advanced:
+  nlp:
+    enabled: true
+    cache-size: 1000
+    timeout: 5000  # ms
+  performance:
+    async-processing: true
+    max-threads: 4
+  logging:
+    conversation-logs: false
+    save-format: "json"
