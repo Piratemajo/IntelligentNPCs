@@ -33,7 +33,7 @@ public class NPCMemory {
             return memory;
         });
     }
-
+    // Futura implementacion  de recordar la interacion del jugador con el npc
     public void rememberInteraction(UUID playerId, String input, String response) {
         PlayerMemory memory = getPlayerMemory(playerId);
         memory.addInteraction(input, response);

@@ -6,7 +6,7 @@
 
     <groupId>es.srjavierdev</groupId>
     <artifactId>IntelligentNPCs</artifactId>
-    <version>1.4</version>
+    <version>1.5.1-Beta</version>
     <packaging>jar</packaging>
 
     <name>IntelligentNPCs</name>

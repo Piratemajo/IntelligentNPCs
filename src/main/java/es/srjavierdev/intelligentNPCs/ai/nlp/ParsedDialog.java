@@ -8,25 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ParsedDialog {
-    private  String originalText;
-    private String sentiment;
-    private String intent;
     private final Map<String, String> namedEntities;
-    private SemanticGraph dependencies;
 
     public ParsedDialog(String originalText) {
-        this.originalText = originalText;
         this.namedEntities = new HashMap<>();
+
     }
 
 
     public void setSentiment(String sentiment) {
-        this.sentiment = sentiment;
     }
 
 
     public void setIntent(String intent) {
-        this.intent = intent;
     }
 
     public Map<String, String> getNamedEntities() {
@@ -39,7 +33,6 @@ public class ParsedDialog {
 
 
     public void setDependencies(SemanticGraph dependencies) {
-        this.dependencies = dependencies;
     }
 
 

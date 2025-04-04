@@ -1,7 +1,13 @@
 package es.srjavierdev.intelligentNPCs.commands;
 
+/*
+* Falta la conexión con la ia atraves  de los NeuralNetwork (contiene varios errors) - Codigo de error INPC-001
+*
+*/
 
 import es.srjavierdev.intelligentNPCs.IntelligentNPCs;
+import es.srjavierdev.intelligentNPCs.ai.NeuralNetwork;
+import es.srjavierdev.intelligentNPCs.npc.EnhancedNeuralNPC;
 import es.srjavierdev.intelligentNPCs.npc.NPCManager;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.command.Command;
@@ -9,15 +15,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class NPCCommand implements CommandExecutor {
     private final IntelligentNPCs plugin;
     private final NPCManager npcManager;
+   // private  NeuralNetwork network;
 
     public NPCCommand(IntelligentNPCs plugin) {
         this.plugin = plugin;
         this.npcManager = plugin.getNPCManager();
+       // this.network = new NeuralNetwork(); (INPC-001)
     }
 
     @Override
@@ -51,7 +60,7 @@ public class NPCCommand implements CommandExecutor {
         }
     }
 
-    private boolean handleCreateCommand(Player player, String[] args) {
+    private boolean handleCreateCommand(Player player, String[] args)  {
         if (!player.hasPermission("intelligentnpcs.admin")) {
             player.sendMessage("§cNo tienes permiso para crear NPCs.");
             return true;
@@ -63,9 +72,13 @@ public class NPCCommand implements CommandExecutor {
         }
 
         String name = args[1];
+        // Carga el modelo de la ia
         String personality = args[2];
+        //network.initialize(personality); Inicializar el npc (error INPC-001)
 
         npcManager.createNPC(player, name, personality, player.getLocation());
+        npcManager.saveData();
+
         return true;
     }
 
@@ -85,7 +98,7 @@ public class NPCCommand implements CommandExecutor {
         player.sendMessage("§aNPC eliminado correctamente.");
         return false;
     }
-
+    // Por revisar.
     private boolean handleTalkCommand(Player player) {
         if (!player.hasPermission("intelligentnpcs.admin")) {
             player.sendMessage("§cNo tienes permiso para hablar con NPCs.");
@@ -97,7 +110,7 @@ public class NPCCommand implements CommandExecutor {
             player.sendMessage("§cNo estás mirando a un NPC válido.");
             return true;
         }
-
+        npcManager.processPlayerResponse(player,"");
         Optional<String> message = npcManager.getNPCMessage(npc.getId());
         message.ifPresentOrElse(
                 msg -> player.sendMessage("§a" + msg),
@@ -105,10 +118,11 @@ public class NPCCommand implements CommandExecutor {
         );
         return true;
     }
-
+    // Listado de todos los npcs creados con su naturaleza y nlp
     private boolean handleListCommand(Player player) {
         if (!player.hasPermission("intelligentnpcs.admin")) {
             player.sendMessage("§cNo tienes permiso para listar NPCs.");
+            npcManager.listNPCs();
             return true;
         }
         return false ;

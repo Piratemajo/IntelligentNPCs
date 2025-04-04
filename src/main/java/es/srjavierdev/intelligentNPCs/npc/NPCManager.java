@@ -3,20 +3,27 @@ package es.srjavierdev.intelligentNPCs.npc;
 
 import es.srjavierdev.intelligentNPCs.IntelligentNPCs;
 import es.srjavierdev.intelligentNPCs.economy.EconomyManager;
+import es.srjavierdev.intelligentNPCs.memory.NPCMemory;
+import es.srjavierdev.intelligentNPCs.reputation.ReputationSystem;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 public class NPCManager {
-    private final IntelligentNPCs plugin;
+    private  IntelligentNPCs plugin;
     private final EconomyManager economyManager;
+
+    private  NPCMemory npcMemory;
     private final Map<Integer, EnhancedNeuralNPC> npcs;
 
     public NPCManager(IntelligentNPCs plugin, EconomyManager economyManager) {
@@ -75,31 +82,37 @@ public class NPCManager {
                 .ifPresent(npc -> npc.processPlayerResponse(player, message));
     }
 
-    public void saveData() throws IOException {
+    public void saveData() {
+        // npcMemory.saveAllData(); Por comprobar los errores causados
         saveNPCData();
         saveReputationData();
         plugin.getLogger().info("Datos de NPCs guardados correctamente.");
     }
-    /*
-    * Faltaria los datos del npcs y su reputacion
-    * */
+
+
     private void saveReputationData() {
+
 
     }
 
-    private void saveNPCData() throws IOException {
+    // Guardadp de datos del npc en la configuracion
+    private void saveNPCData()  {
         for (EnhancedNeuralNPC npc : npcs.values()) {
-            YamlConfiguration config = new YamlConfiguration();
+            FileConfiguration config = new YamlConfiguration();
+
             config.set("npcs." + npc.getId() + ".name", npc.getName());
             config.set("npcs." + npc.getId() + ".personality", npc.getPersonality());
-            config.save(new File(plugin.getDataFolder(), "data/npcs.yml"));
+            try {
+                config.save(new File(IntelligentNPCs.getInstance().getDataFolder(), "data/config.yml"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             plugin.getLogger().info("NPC " + npc.getId() + " guardado en el archivo de configuración.");
         }
     }
-
+    // Recarga los datos cargados
     public void loadData() {
         loadNPCData();
-        loadReputationData();
     }
 
     private void loadNPCData() {

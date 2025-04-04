@@ -37,7 +37,5 @@ public class NPCListener implements Listener {
             npcManager.processPlayerResponse(player, event.getMessage());
         }
     }
-
-    // Otros métodos y lógica del listener pueden ir aquí
     
 }

@@ -11,7 +11,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public class ProceduralMissionGenerator {
+public class ProceduralMissionGenerator  {
+
     private static final Random random = new Random();
     private static final Map<MissionType, List<Material>> COLLECT_ITEMS = new EnumMap<>(MissionType.class);
     private static final Map<MissionType, List<EntityType>> HUNT_ENTITIES = new EnumMap<>(MissionType.class);
@@ -24,6 +25,7 @@ public class ProceduralMissionGenerator {
         // Configuración de materiales para misiones de recolección
         COLLECT_ITEMS.put(MissionType.
                 COLLECTION, Arrays.asList(
+
                 Material.IRON_INGOT, Material.GOLD_INGOT, Material.DIAMOND,
                 Material.EMERALD, Material.REDSTONE, Material.LAPIS_LAZULI,
                 Material.COAL, Material.NETHERITE_SCRAP, Material.QUARTZ

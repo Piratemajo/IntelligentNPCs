@@ -4,7 +4,10 @@ package es.srjavierdev.intelligentNPCs;
 import es.srjavierdev.intelligentNPCs.commands.NPCCommand;
 import es.srjavierdev.intelligentNPCs.economy.EconomyManager;
 import es.srjavierdev.intelligentNPCs.listeners.NPCListener;
+import es.srjavierdev.intelligentNPCs.memory.NPCMemory;
 import es.srjavierdev.intelligentNPCs.npc.NPCManager;
+import es.srjavierdev.intelligentNPCs.reputation.ReputationSystem;
+import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,6 +17,8 @@ import java.util.logging.Level;
 
 public class IntelligentNPCs extends JavaPlugin {
 
+    private NPCMemory npcMemory;
+    private ReputationSystem reputationSystem;
     private static IntelligentNPCs instance;
     private NPCManager npcManager;
     private EconomyManager economyManager;
@@ -56,8 +61,11 @@ public class IntelligentNPCs extends JavaPlugin {
         loadData();
 
         // Mensaje de activación
-        getLogger().log(Level.INFO, "IntelligentNPCs v2.0 ha sido activado correctamente!");
+        getLogger().log(Level.INFO, "IntelligentNPCs 1.5.1v ha sido activado correctamente!");
         getLogger().log(Level.INFO, "NPCs cargados: " + npcManager.getLoadedNPCsCount());
+
+        this.npcMemory = new NPCMemory(this);  // Inicializar el npcMemory
+        this.reputationSystem = new ReputationSystem();
     }
 
     @Override

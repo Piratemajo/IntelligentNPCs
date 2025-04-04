@@ -7,10 +7,10 @@
 > [!NOTE]
 > Próximamente actulizacion del Proyecto y mucho más.
 
-![Versión](https://img.shields.io/badge/Versión-2.0-blue)
-![Spigot](https://img.shields.io/badge/Spigot-1.20.1-green)
+![Versión](https://img.shields.io/badge/Versión-1.5.1-blue)
+![Paper](https://img.shields.io/badge/Spigot-1.20.1-green)
 
-Plugin de NPCs inteligentes con redes neuronales, sistema de misiones procedurales y diálogos dinámicos.
+Plugin de Minecraft de NPCs inteligentes con redes neuronales, sistema de misiones procedurales y diálogos dinámicos.
 
 ## 📌 Características Principales
 
@@ -387,8 +387,8 @@ advanced:
 
 Este proyecto está bajo la licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
 
-## 🤝 Contribuir
+## 🧐 Futuras Actulizaciones del Proyecto
 
-1. Haz fork del proyecto
-5. Abre un Pull Request
-
+1. En el proyecto ya tengo varios metodos preparados y funciones poco a poco ire metiendolas en el proyecto.
+2. Compatibilidad con SQL.
+3. Compatibilidad con mas software de minecraft (Folia de papermc).

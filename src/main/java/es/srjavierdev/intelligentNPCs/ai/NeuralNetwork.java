@@ -2,6 +2,7 @@ package es.srjavierdev.intelligentNPCs.ai;
 
 
 
+import es.srjavierdev.intelligentNPCs.ai.nlp.ParsedDialog;
 import es.srjavierdev.intelligentNPCs.memory.Interaction;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class NeuralNetwork {
+public class NeuralNetwork  {
     private MultiLayerNetwork network;
     private Vocabulary vocabulary;
     private String personality;
@@ -42,12 +43,12 @@ public class NeuralNetwork {
                 .list()
                 .layer(0, new LSTM.Builder()
                         .nIn(inputSize)
-                        .nOut(hiddenSize)
+                        .nOut(outputSize)
                         .activation(Activation.TANH)
                         .build())
                 .layer(1, new DenseLayer.Builder()
                         .nIn(hiddenSize)
-                        .nOut(hiddenSize)
+                        .nOut(outputSize)
                         .activation(Activation.RELU)
                         .build())
                 .build();
@@ -63,7 +64,7 @@ public class NeuralNetwork {
         loadModel();
     }
 
-
+    // Por revisar
     public String generateResponse(String input, String expectedOutput ,ArrayList<Interaction> context, int reputation) {
         // Convertir contexto a lista de pares clave-valor
         List<Map.Entry<String, String>> contextList = new ArrayList<>();

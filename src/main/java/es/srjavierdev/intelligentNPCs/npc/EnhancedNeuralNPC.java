@@ -5,6 +5,7 @@ import es.srjavierdev.intelligentNPCs.IntelligentNPCs;
 import es.srjavierdev.intelligentNPCs.memory.PlayerMemory;
 import es.srjavierdev.intelligentNPCs.memory.NPCMemory;
 import es.srjavierdev.intelligentNPCs.missions.Mission;
+import es.srjavierdev.intelligentNPCs.missions.MissionType;
 import es.srjavierdev.intelligentNPCs.missions.generator.ProceduralMissionGenerator;
 import es.srjavierdev.intelligentNPCs.reputation.ReputationSystem;
 import net.citizensnpcs.api.CitizensAPI;
