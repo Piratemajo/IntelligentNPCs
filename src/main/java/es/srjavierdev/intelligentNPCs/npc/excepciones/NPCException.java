@@ -82,7 +82,7 @@ public class NPCException extends Exception {
      * Códigos de error comunes predefinidos
      */
     public static class ErrorCodes {
-        public static final String creacion_erronea = "INPC-001";
+        public static final String CREATION_FAILED  = "INPC-001";
         public static final String NLP_INIT_FAILED = "INPC-002";
         public static final String MEMORY_ACCESS = "INPC-003";
         public static final String INVALID_PERSONALITY = "INPC-004";

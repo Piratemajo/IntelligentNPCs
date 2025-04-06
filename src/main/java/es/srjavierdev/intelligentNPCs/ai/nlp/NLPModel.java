@@ -11,6 +11,16 @@ public class NLPModel {
     private String personality;
     private boolean initialized = false;
 
+    private static boolean NLP_AVAILABLE = false;
+
+    static {
+        try {
+            Class.forName("edu.stanford.nlp.pipeline.StanfordCoreNLP");
+            NLP_AVAILABLE = true;
+        } catch (ClassNotFoundException e) {
+            NLP_AVAILABLE = false;
+        }
+    }
     public void initialize(String personality) throws NLPInitializationException {
         this.personality = personality;
 
@@ -46,9 +56,11 @@ public class NLPModel {
         if (!initialized) {
             throw new IllegalStateException("NLP model not initialized");
         }
-
-        // Procesamiento real del input usando Stanford CoreNLP
-        // (Implementación detallada aquí)
+        // Por hacer
         return "Respuesta generada";
+    }
+
+    public static boolean isNlpAvailable() {
+        return NLP_AVAILABLE;
     }
 }

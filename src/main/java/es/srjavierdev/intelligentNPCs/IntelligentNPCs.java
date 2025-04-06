@@ -1,6 +1,7 @@
 package es.srjavierdev.intelligentNPCs;
 
 
+import es.srjavierdev.intelligentNPCs.ai.nlp.NLPModel;
 import es.srjavierdev.intelligentNPCs.commands.NPCCommand;
 import es.srjavierdev.intelligentNPCs.economy.EconomyManager;
 import es.srjavierdev.intelligentNPCs.listeners.NPCListener;
@@ -22,6 +23,7 @@ public class IntelligentNPCs extends JavaPlugin {
     private static IntelligentNPCs instance;
     private NPCManager npcManager;
     private EconomyManager economyManager;
+    private NLPModel nlpModel;
 
     @Override
     public void onEnable() {
@@ -66,6 +68,14 @@ public class IntelligentNPCs extends JavaPlugin {
 
         this.npcMemory = new NPCMemory(this);  // Inicializar el npcMemory
         this.reputationSystem = new ReputationSystem();
+
+        // StandFord  Core
+        if (!NLPModel.isNlpAvailable()) {
+            getLogger().warning("==============================================");
+            getLogger().warning(" Stanford CoreNLP no encontrado!");
+            getLogger().warning(" Algunas funciones avanzadas estarán limitadas");
+            getLogger().warning("==============================================");
+        }
     }
 
     @Override

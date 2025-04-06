@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
+import static org.bukkit.Bukkit.getLogger;
+
 public class NPCCommand implements CommandExecutor {
     private final IntelligentNPCs plugin;
     private final NPCManager npcManager;
@@ -162,7 +164,6 @@ public class NPCCommand implements CommandExecutor {
     private boolean handleListCommand(Player player) {
         if (!player.hasPermission("intelligentnpcs.admin")) {
             player.sendMessage("§cNo tienes permiso para listar NPCs.");
-            npcManager.listNPCs();
             return true;
         }
         return false ;

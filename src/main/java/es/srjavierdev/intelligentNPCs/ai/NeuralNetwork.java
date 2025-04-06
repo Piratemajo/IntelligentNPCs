@@ -2,7 +2,6 @@ package es.srjavierdev.intelligentNPCs.ai;
 
 
 
-import es.srjavierdev.intelligentNPCs.ai.nlp.ParsedDialog;
 import es.srjavierdev.intelligentNPCs.memory.Interaction;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
