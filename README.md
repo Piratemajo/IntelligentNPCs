@@ -8,7 +8,7 @@
 > Próximamente actulizacion del Proyecto y mucho más.
 
 ![Versión](https://img.shields.io/badge/Versión-1.5.1-blue)
-![Paper](https://img.shields.io/badge/Spigot-1.20.1-green)
+![Paper](https://img.shields.io/badge/Paper-1.20.1-green)
 
 Plugin de Minecraft de NPCs inteligentes con redes neuronales, sistema de misiones procedurales y diálogos dinámicos.
 
@@ -256,131 +256,203 @@ classDiagram
 Edita `config.yml` para personalizar:
 
 ```yaml
-# Configuración de IntelligentNPCs
+# Configuración de IntelligentNPCs - Versión 1.6
 settings:
   # Configuración general del plugin
   debug-mode: false
   save-interval: 300  # Segundos entre guardados automáticos
-  max-conversation-length: 15  # Máximo de mensajes por conversación
-  default-personality: "neutral"  # Personalidad por defecto para nuevos NPCs
+  max-conversation-length: 20  # Aumentado de 15 a 20 mensajes
+  default-personality: "neutral"
 
 # Configuración de NPCs
 npcs:
-  # Personalidades disponibles
   personalities:
     warrior:
       display-name: "Guerrero"
-      response-speed: 1.2  # Multiplicador de velocidad de respuesta
-      aggression-level: 0.7  # 0-1
-      mission-chance: 0.6  # Probabilidad de ofrecer misiones
+      response-speed: 1.2
+      aggression-level: 0.7
+      mission-chance: 0.6
+      nlp-model: "warrior_model.ser"  # Nuevo: Modelo específico
+      response-style: "directo"  # Nuevo
     scholar:
       display-name: "Erudito"
       response-speed: 0.8
       aggression-level: 0.1
       mission-chance: 0.4
+      nlp-model: "scholar_model.ser"
+      response-style: "detallado"
     merchant:
       display-name: "Mercader"
       response-speed: 1.0
       aggression-level: 0.3
       mission-chance: 0.8
+      nlp-model: "merchant_model.ser"
+      response-style: "comercial"
     neutral:
       display-name: "Neutral"
       response-speed: 1.0
       aggression-level: 0.5
       mission-chance: 0.5
+      nlp-model: "neutral_model.ser"
+    friendly:  # Nueva personalidad
+      display-name: "Amigable"
+      response-speed: 1.1
+      aggression-level: 0.2
+      mission-chance: 0.7
+      nlp-model: "friendly_model.ser"
+      response-style: "amable"
 
   # Configuración de spawn
   spawn:
     max-npcs-per-chunk: 2
-    spawn-chance: 0.15  # Probabilidad de spawn en chunks válidos
+    spawn-chance: 0.15
+    min-player-level: 5  # Nuevo: Nivel mínimo para spawn
 
-# Configuración de misiones
+# Configuración de NLP 
+nlp:
+  enabled: true
+  models-directory: "plugins/IntelligentNPCs/models"
+  cache-size: 1500  # Aumentado de 1000
+  processing-timeout: 5000  # ms
+  max-text-length: 250  # Caracteres máximos a procesar
+  language-packs:  # Nuevo: Soporte multiidioma
+    es_ES:
+      core: "stanford-spanish.jar"
+      models: "spanish-models.jar"
+    en_US:
+      core: "stanford-english.jar"
+      models: "english-models.jar"
+  fallback-language: "en_US"  # Idioma alternativo
+
 missions:
   difficulty-settings:
     min-level: 1
-    max-level: 10
-    level-multiplier: 0.5  # Multiplicador de dificultad basado en nivel
-  
+    max-level: 15  # Aumentado de 10
+    level-multiplier: 0.6  # Ajustado de 0.5
+    dynamic-difficulty: true  # Nuevo: Ajusta según habilidad jugador
+
   reward-settings:
     base-money-reward: 5.0
     money-multiplier: 1.5
     item-reward-chance: 0.65
     xp-reward-base: 10
+    reputation-rewards:  # Nuevo
+      completion: 5
+      bonus-objectives: 2
+      time-bonus: 3
 
   cooldowns:
-    between-missions: 1200  # 20 minutos en segundos
-    same-player-mission: 3600  # 1 hora en segundos
+    between-missions: 1200
+    same-player-mission: 3600
+    same-type-mission: 1800  # Nuevo: Cooldown por tipo
 
-# Configuración de diálogos
+# Configuración de diálogos 
 dialogue:
-  greeting-variations: 5  # Número de saludos diferentes por personalidad
-  response-timeout: 30  # Segundos antes de terminar conversación inactiva
-  memory-size: 10  # Número de interacciones recordadas por jugador
+  greeting-variations: 8  # Aumentado de 5
+  response-timeout: 30
+  memory-size: 15  # Aumentado de 10
+  max-response-time: 3  # Segundos máximos para generar respuesta
 
-  # Palabras clave para triggers especiales
+  # Palabras clave mejoradas
   triggers:
-    mission-request: ["misión", "tarea", "trabajo", "quest"]
-    help-request: ["ayuda", "socorro", "problema"]
-    trade-request: ["comprar", "vender", "intercambio"]
+    mission-request: ["misión", "tarea", "trabajo", "quest", "encargo"]
+    help-request: ["ayuda", "socorro", "problema", "emergencia"]
+    trade-request: ["comprar", "vender", "intercambio", "comercio", "negocio"]
+    nlp-triggers:  # Nuevo: Para funciones avanzadas
+      sentiment: ["feliz", "triste", "enojado", "emocionado"]
+      questions: ["cómo", "qué", "dónde", "por qué"]
 
-# Configuración de reputación
+# Configuración de reputación 
 reputation:
   base-gain: 1
   base-loss: 2
   mission-complete-gain: 5
   mission-fail-loss: 3
+  daily-decay: 1  # Nuevo: Pérdida diaria de reputación
   levels:
     -100: "Enemigo"
+    -75: "Hostil"
     -50: "Desconfiado"
+    -25: "Receloso"
     0: "Neutral"
+    25: "Conocido"
     50: "Aliado"
+    75: "Amigo"
     100: "Héroe"
+  effects:  # Nuevo: Efectos por nivel
+    -50:
+      mission-rewards: 0.7
+      dialogue-options: 5
+    50:
+      mission-rewards: 1.3
+      dialogue-options: 10
 
-# Configuración de economía (requiere Vault)
+# Configuración de economía mejorada
 economy:
   enabled: true
   currency-symbol: "$"
   reward-multiplier: 1.0
   penalty-multiplier: 0.5
+  inflation-adjustment: 0.95  # Nuevo: Ajuste por inflación
+  min-reward: 2.0  # Nuevo: Mínimo garantizado
 
-# Configuración de integraciones
+# Integraciones ampliadas
 integrations:
-  Citizens: true
-  Vault: true
-  PlaceholderAPI: false
-  WorldGuard: true
+  Citizens:
+    enabled: true
+    min-version: "2.0.30"
+  Vault:
+    enabled: true
+    economy: true
+    permissions: false
+  PlaceholderAPI:
+    enabled: false
+    auto-register: true
+  WorldGuard:
+    enabled: true
+    region-blacklist: ["npc-restricted"]  # Nuevo
+  MythicMobs:  # Nueva integración
+    enabled: false
+    boss-missions: true
 
-# Mensajes personalizables
+# Mensajes personalizables ampliados
 messages:
   greetings:
     - "¡Saludos, {player}!"
     - "¿En qué puedo ayudarte hoy?"
     - "Hola, ¿qué tal?"
+    - "¡Buen día, aventurero!"
+    - "Vaya, un visitante. ¿Necesitas algo?"
   mission-offer:
     - "Tengo una misión para ti: {mission_objective}"
     - "¿Podrías ayudarme con {mission_objective}?"
     - "Necesito a alguien para {mission_objective}, ¿te interesa?"
+    - "Hay una tarea disponible: {mission_objective}. ¿Aceptas?"
   reputation-change:
-    positive: "¡Tu reputación con {npc_name} ha mejorado!"
-    negative: "Tu reputación con {npc_name} ha empeorado..."
+    positive: "¡Tu reputación con {npc_name} ha mejorado! (+{amount})"
+    negative: "Tu reputación con {npc_name} ha empeorado... ({amount})"
   errors:
     no-mission: "No tengo ninguna misión para ti ahora mismo."
     cooldown: "Vuelve más tarde, no tengo nada para ti todavía."
     no-permission: "No pareces estar preparado para esto."
+    nlp-failure: "No entiendo lo que dices. ¿Podrías reformularlo?"  # Nuevo
+    command-error: "Error al ejecutar el comando: {error_code}"  # Nuevo
 
-# Configuración avanzada
+# Configuración avanzada mejorada
 advanced:
-  nlp:
-    enabled: true
-    cache-size: 1000
-    timeout: 5000  # ms
   performance:
     async-processing: true
     max-threads: 4
+    thread-timeout: 30  # Segundos
   logging:
     conversation-logs: false
     save-format: "json"
-
+    log-errors-to-file: true  # Nuevo
+    max-log-size: 10  # MB
+  backup:
+    auto-backup: true  # Nuevo
+    backup-interval: 86400  # 24 horas en segundos
+    max-backups: 7
 ```
 
 ## 📄 Licencia
@@ -392,3 +464,7 @@ Este proyecto está bajo la licencia MIT. Ver [LICENSE](LICENSE) para más detal
 1. En el proyecto ya tengo varios metodos preparados y funciones poco a poco ire metiendolas en el proyecto.
 2. Compatibilidad con SQL.
 3. Compatibilidad con mas software de minecraft (Folia de papermc).
+
+## 💻 Servidor de Pruebas
+
+- IP: Proximamente...

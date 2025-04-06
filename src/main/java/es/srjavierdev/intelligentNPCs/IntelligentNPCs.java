@@ -61,7 +61,7 @@ public class IntelligentNPCs extends JavaPlugin {
         loadData();
 
         // Mensaje de activación
-        getLogger().log(Level.INFO, "IntelligentNPCs 1.5.1v ha sido activado correctamente!");
+        getLogger().log(Level.INFO, "IntelligentNPCs 1.6v ha sido activado correctamente!");
         getLogger().log(Level.INFO, "NPCs cargados: " + npcManager.getLoadedNPCsCount());
 
         this.npcMemory = new NPCMemory(this);  // Inicializar el npcMemory

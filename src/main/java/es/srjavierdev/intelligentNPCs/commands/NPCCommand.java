@@ -1,22 +1,29 @@
 package es.srjavierdev.intelligentNPCs.commands;
 
 /*
-* Falta la conexión con la ia atraves  de los NeuralNetwork (contiene varios errors) - Codigo de error INPC-001
+* Solucion de los codigos he creado nueva parte de exepciones
 *
 */
 
 import es.srjavierdev.intelligentNPCs.IntelligentNPCs;
 import es.srjavierdev.intelligentNPCs.ai.NeuralNetwork;
+import es.srjavierdev.intelligentNPCs.ai.excepciones.NLPInitializationException;
+import es.srjavierdev.intelligentNPCs.ai.nlp.NLPModel;
 import es.srjavierdev.intelligentNPCs.npc.EnhancedNeuralNPC;
 import es.srjavierdev.intelligentNPCs.npc.NPCManager;
+import es.srjavierdev.intelligentNPCs.npc.excepciones.NPCException;
 import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 public class NPCCommand implements CommandExecutor {
     private final IntelligentNPCs plugin;
@@ -26,7 +33,6 @@ public class NPCCommand implements CommandExecutor {
     public NPCCommand(IntelligentNPCs plugin) {
         this.plugin = plugin;
         this.npcManager = plugin.getNPCManager();
-       // this.network = new NeuralNetwork(); (INPC-001)
     }
 
     @Override
@@ -60,26 +66,60 @@ public class NPCCommand implements CommandExecutor {
         }
     }
 
-    private boolean handleCreateCommand(Player player, String[] args)  {
+    // Nuevas Partes 1.6 - Modelos
+    private boolean handleCreateCommand(Player player, String[] args) {
+        // Verificación de permisos
         if (!player.hasPermission("intelligentnpcs.admin")) {
             player.sendMessage("§cNo tienes permiso para crear NPCs.");
             return true;
         }
 
+        // Validación de argumentos
         if (args.length < 3) {
             player.sendMessage("§cUso: /intelligentnpc create <nombre> <personalidad>");
+            player.sendMessage("§6Personalidades disponibles: " + String.join(", ", getAvailablePersonalities()));
             return false;
         }
 
         String name = args[1];
-        // Carga el modelo de la ia
-        String personality = args[2];
-        //network.initialize(personality); Inicializar el npc (error INPC-001)
+        String personality = args[2].toLowerCase();
 
-        npcManager.createNPC(player, name, personality, player.getLocation());
+        // Validar personalidad
+        if (!isValidPersonality(personality)) {
+            player.sendMessage("§cPersonalidad no válida. Opciones: " + String.join(", ", getAvailablePersonalities()));
+            return false;
+        }
+
+        // Crear NPC con inicialización NLP
+        EnhancedNeuralNPC npc = npcManager.createNPC(player, name, personality, player.getLocation());
+
+        // Inicializar modelo NLP (esto podría ser asíncrono para no bloquear el hilo principal)
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                NLPModel model = new NLPModel();
+                model.initialize(personality); // Carga el modelo específico para esta personalidad
+                npc.setNLPModel(model);
+
+                player.sendMessage("§aModelo NLP cargado para personalidad: §e" + personality);
+            } catch (NLPInitializationException e) {
+                player.sendMessage("§cError cargando modelo NLP: " + e.getMessage());
+                plugin.getLogger().log(Level.SEVERE, "Error inicializando NLP para NPC " + name, e);
+            }
+        });
+
+        player.sendMessage("§aNPC §e" + name + " §acreado con personalidad §6" + personality);
         npcManager.saveData();
 
         return true;
+    }
+
+    // Métodos auxiliares
+    private List<String> getAvailablePersonalities() {
+        return Arrays.asList("warrior", "merchant", "scholar", "neutral", "friendly", "aggressive");
+    }
+
+    private boolean isValidPersonality(String personality) {
+        return getAvailablePersonalities().contains(personality.toLowerCase());
     }
 
     private boolean handleDeleteCommand(Player player) {

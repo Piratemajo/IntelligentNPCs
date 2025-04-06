@@ -2,6 +2,7 @@ package es.srjavierdev.intelligentNPCs.npc;
 
 
 import es.srjavierdev.intelligentNPCs.IntelligentNPCs;
+import es.srjavierdev.intelligentNPCs.ai.nlp.NLPModel;
 import es.srjavierdev.intelligentNPCs.memory.PlayerMemory;
 import es.srjavierdev.intelligentNPCs.memory.NPCMemory;
 import es.srjavierdev.intelligentNPCs.missions.Mission;
@@ -25,6 +26,9 @@ public class EnhancedNeuralNPC {
     private final NPCMemory memory;
     private final ReputationSystem reputationSystem;
     private final ProceduralMissionGenerator missionGenerator;
+
+    // Nuevas Partes 1.6 - Modelos
+    private  NLPModel nlpModel;
 
     private final Map<UUID, Conversation> activeConversations = new ConcurrentHashMap<>();
     private final Map<UUID, Mission> pendingMissions = new ConcurrentHashMap<>();
@@ -53,36 +57,7 @@ public class EnhancedNeuralNPC {
         memory.recordInteraction(playerId, "INIT_CONVERSATION", greeting);
     }
 
-    public void processPlayerInput(Player player, String message) {
-        UUID playerId = player.getUniqueId();
-        Conversation conversation = activeConversations.get(playerId);
 
-        if (conversation == null) {
-            player.sendMessage("No estás en conversación con este NPC.");
-            return;
-        }
-
-        // Procesar el mensaje en un hilo asíncrono
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                // Analizar el mensaje
-                ParsedMessage parsed = analyzeMessage(message);
-
-                // Generar respuesta
-                String response = generateResponse(player, parsed);
-
-                // Manejar acciones especiales
-                handleSpecialActions(player, response);
-
-                // Enviar respuesta
-                sendResponse(player, response);
-
-                // Registrar interacción
-                memory.recordInteraction(playerId, message, response);
-            }
-        }.runTaskAsynchronously(IntelligentNPCs.getInstance());
-    }
 
     public void offerMission(Player player) {
         int reputation = reputationSystem.getReputation(player.getUniqueId(), npcId);
@@ -240,5 +215,18 @@ public class EnhancedNeuralNPC {
     public int getCitizensId() {
         NPC npc = CitizensAPI.getNPCRegistry().getByUniqueId(npcId);
         return npc != null ? npc.getId() : -1;
+    }
+
+    // Nuevas Partes 1.6 - Modelos
+
+    public void setNLPModel(NLPModel model) {
+        this.nlpModel = model;
+    }
+
+    public String processPlayerInput(Player player, String input) {
+        if (nlpModel == null) {
+            return "Mi sistema de lenguaje no está listo todavía...";
+        }
+        return nlpModel.processInput(input);
     }
 }
